@@ -14,7 +14,7 @@
 </head>
 <body>
 
-@include('../shared/nav_bar')
+@include('shared.nav_bar')
 
 <main class="container">
     @yield('content')

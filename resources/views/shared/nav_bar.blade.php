@@ -22,6 +22,19 @@
             </div>
 
         </div>
-        <a class="nav-link" href="{{route('auth')}}">Authentication</a>
+
+        @auth
+            <div class="d-flex">
+                <span>{{auth()->user()->name . ': ' . Auth::user()->getRoleNames()->first()}}</span>
+                <form action="{{route('logout')}}" method="post">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-danger">Logout</button>
+                </form>
+            </div>
+        @endauth
+
+        @guest
+            <a class="nav-link" href="{{route('auth')}}">Authentication</a>
+        @endguest
     </div>
 </nav>
