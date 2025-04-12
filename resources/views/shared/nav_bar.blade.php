@@ -9,9 +9,13 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Users</a>
-                    </li>
+                    @auth
+                        @if(auth()->user()->hasRole('admin'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{route('user.list')}}">Users</a>
+                            </li>
+                        @endif
+                    @endauth
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('client.index')}}">Clients</a>
                     </li>
