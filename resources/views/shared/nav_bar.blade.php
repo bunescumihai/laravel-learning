@@ -38,7 +38,7 @@
         @endauth
 
         @guest
-            <a class="nav-link" href="{{route('auth')}}">Authentication</a>
+            <a class="nav-link" href="{{route('login')}}">Authentication</a>
         @endguest
     </div>
 </nav>

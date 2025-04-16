@@ -1,6 +1,6 @@
 @props(['annonces' => []])
 
-@if(empty($annonces))
+@if(empty($annonces) || count($annonces) == 0)
     <div class="alert alert-info mt-3">
         No annonces found.
     </div>
@@ -14,24 +14,25 @@
             <th scope="col">Address</th>
             <th scope="col">Contacts</th>
             <th scope="col">Created at</th>
-            <th scope="col">Edit</th>
+{{--            <th scope="col">Edit</th>--}}
             <th scope="col">Delete</th>
         </tr>
         </thead>
         <tbody>
+
         @foreach($annonces as $annonce)
             <tr>
                 <th scope="row"></th>
-                <td>{{ $annonce->titile }}</td>
-                <td>{{ $annonce->description }}</td>
+                <td>{{ $annonce->title }}</td>
+                <td class="text-nowrap overflow-hidden text-truncate" style="max-width: 150px">{{ $annonce->description }}</td>
                 <td>{{ $annonce->address }}</td>
 
                 <td>Contact</td>
                 <td>{{$annonce->created_at}}</td>
-                <td><a href="#" class="link-primary">Edit</a></td>
+{{--                <td><a href="#" class="link-primary">Edit</a></td>--}}
 
                 <td>
-                    <form action="" method="post">
+                    <form action="{{route('annonces.destroy', $annonce->id)}}" method="post">
                         @csrf
                         @method('delete')
                         <button class="btn btn-danger" type="submit">Delete</button>

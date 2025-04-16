@@ -25,6 +25,6 @@ Route::resource('clients', ClientController::class)
 
 
 
-Route::get('/auth', AuthController::class)->name('auth');
-Route::post('/auth', [AuthController::class, 'login'])->name('auth.login');
+Route::get('/auth', AuthController::class)->name('login');
+Route::post('/auth', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');

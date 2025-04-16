@@ -22,7 +22,7 @@ class CreateAnnonceTerrainRequest extends CreateAnnonceRequest
     public function rules(): array
     {
         return array_merge(parent::rules(), [
-            'specification.surface' => ['required', 'numeric', 'min:1'],
+            'specifications.surface' => ['required', 'numeric', 'min:1'],
         ]);
     }
 }

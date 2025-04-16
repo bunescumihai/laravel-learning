@@ -64,7 +64,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('user.index')
+        return redirect()->route('users.index')
             ->with('success', 'User updated successfully!');
     }
 
@@ -87,7 +87,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->route('user.index')->with(
+        return redirect()->route('users.index')->with(
             'success', 'User deleted successfully!'
         );
     }

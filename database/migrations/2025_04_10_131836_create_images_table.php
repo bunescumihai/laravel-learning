@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->char('annonce_id', 36);
             $table->foreign('annonce_id')->on('annonces')->references('id');
-            $table->binary('image');
+            $table->string('image');
         });
+
     }
 
     /**

@@ -7,7 +7,7 @@
 @endphp
 
 @section('content')
-    <h1>Edit user</h1>
+    <h1>Edit client</h1>
 
     <div class="col-4">
         <form action="{{route('clients.update', $client->id)}}" method="post" enctype="multipart/form-data">
@@ -62,7 +62,7 @@
                 <label for="phone" class="form-label">Phone number</label>
                 <input type="hidden" name="contacts[1][type]" class="form-control"
                        value="{{ \App\Enums\ContactTypeEnum::PHONE }}" required>
-                <input name="contacts[1][value]" id="phone" value={{ old('contacts[1][value]', $client->phone()) }} type="text" class="form-control">
+                <input name="contacts[1][value]" id="phone" value="{{ old('contacts[1][value]', $client->phone()) }}" class="form-control">
             </div>
 
             <button class="btn btn-primary mt-4"> Submit</button>

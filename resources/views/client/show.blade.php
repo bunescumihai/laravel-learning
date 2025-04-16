@@ -12,22 +12,24 @@
                 <div class="ms-4">
                     <h1 class="mt-3">{{ $client->name }}</h1>
                     <p class="mt-2">Address: {{ $client->address }}</p>
-                    <p class="mt-2">Contacts:</p>
-                    <ul>
-                        @foreach($client->contacts as $contact)
-                            <li>{{ \App\Enums\ContactTypeEnum::getKeyByValue($contact->type).': ' . $contact->value }}</li>
-                        @endforeach
-                    </ul>
+                    @if($client->contacts->isNotEmpty())
+                        <p class="mt-2">Contacts:</p>
+                        <ul>
+                            @foreach($client->contacts as $contact)
+                                <li>{{ \App\Enums\ContactTypeEnum::getKeyByValue($contact->type).': ' . $contact->value }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </div>
             </div>
-            <div class="col-8">
+            <div class="col-9">
                 <div class="d-flex">
                     <a href="{{route('annonces.create-maison', $client->id)}}" class="btn btn-outline-secondary">Create annonce maison</a>
                     <a href="{{route('annonces.create-terrain', $client->id)}}" class="btn btn-outline-secondary ms-3">Create annonce terrain</a>
                 </div>
 
                 <div>
-                    <x-annonces></x-annonces>
+                    <x-annonces :annonces="$client->annonces"></x-annonces>
                 </div>
             </div>
         </div>

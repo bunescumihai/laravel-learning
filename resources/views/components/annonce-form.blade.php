@@ -46,7 +46,7 @@
     </div>
 
     <div class="form-check form-switch mt-3">
-        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" >
+        <input checked name="use_client_contacts" class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" value="true">
         <label class="form-check-label" for="flexSwitchCheckChecked">Use client contacts</label>
     </div>
 
