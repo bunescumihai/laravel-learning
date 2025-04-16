@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class CreateAnnonceRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return auth()->user()->hasRole(['admin', 'manager']);
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'title' => ['required', 'max:256'],
+            'description' => ['required', 'max:2048'],
+            'address' => ['required', 'max:256'],
+            'use_client_contacts' => ['boolean'],
+            'contacts' => ['array'],
+            'contacts.*.type' => ['required', 'string', 'in:' . implode(',', array_map(fn($case) => $case->value, \App\Enums\ContactTypeEnum::cases()))],
+            'contacts.*.value' => ['string', 'max:255', 'nullable'],
+            'images' => ['required','array', 'min:1', 'max:6'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg'],
+        ];
+    }
+}

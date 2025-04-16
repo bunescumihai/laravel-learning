@@ -13,7 +13,7 @@
     <div class="d-flex justify-content-between">
         <h1 class="my-3">Users</h1>
         <div class="d-flex align-items-center">
-            <a href="{{route('user.createView')}}" class="btn btn-primary"> Create user</a>
+            <a href="{{route('users.create')}}" class="btn btn-primary"> Create user</a>
         </div>
 
 
@@ -42,23 +42,28 @@
                     <td>
                         <div class="align-items-center d-flex">
 
-                            <div class="rounded-circle me-2" style="background-image: url('{{asset('storage/' . $user->image)}}'); width: 40px; height: 40px; background-size: cover; background-position: center"></div>
+                            <div class="rounded-circle me-2"
+                                 style="background-image: url('{{asset('storage/' . $user->image)}}'); width: 40px; height: 40px; background-size: cover; background-position: center"></div>
                             {{ $user->name }}
                         </div>
                     </td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->roles->pluck('name')[0]}}</td>
                     <td>
-                        <a class="link-primary" href="{{ route('user.edit', $user->id) }}">
+                        <a class="link-primary" href="{{ route('users.edit', $user->id) }}">
                             Edit
                         </a>
                     </td>
                     <td>
-                        <form action="{{route('user.delete', $user->id)}}" method="post">
-                            @csrf
-                            @method('delete')
-                            <button class="btn btn-danger" type="submit">Delete</button>
-                        </form>
+                        @if($user->id == auth()->user()->id)
+                            YOU
+                        @else
+                            <form action="{{route('users.destroy', $user->id)}}" method="post">
+                                @csrf
+                                @method('delete')
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach

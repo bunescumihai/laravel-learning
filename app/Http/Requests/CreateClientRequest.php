@@ -2,16 +2,17 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ContactTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateUserRequest extends FormRequest
+class CreateClientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->user()->hasRole('admin');
+        return auth()->user()->hasRole(['admin', 'manager']);
     }
 
     /**
@@ -22,16 +23,12 @@ class CreateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'max:255'],
-            'email' => ['required',  'unique:users', 'email'],
-            'password' => ['required', 'min:6'],
-            'address' => ['required', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
-            'role' => ['required', 'in:admin,client'],
+            'contacts' => ['array'],
+            'contacts.*.type' => ['required', 'string', 'in:' . implode(',', array_map(fn($case) => $case->value, ContactTypeEnum::cases()))],
+            'contacts.*.value' => ['string', 'max:255', 'nullable'],
         ];
     }
-
-
-
-
 }

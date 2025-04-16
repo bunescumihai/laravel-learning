@@ -10,46 +10,46 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function list()
+    public function index()
     {
-        $users = User::whereHas('roles', function ($query) {
-            $query->where('name', RoleEnum::ADMIN)
-                ->orWhere('name', RoleEnum::MANAGER);
-        })->where('id', '!=', auth()->user()->id)
-            ->orderBy('id', 'desc')->get();
+        $users = User::get();
 
-        return view('user.list', [
+        return view('user.index', [
             'users' => $users,
         ]);
     }
 
-    public function createView()
+    public function create()
     {
         return view('user.create');
     }
 
-    public function create(CreateUserRequest $request)
+    public function store(CreateUserRequest $request)
     {
         if (isset($request->validated()['image'])) {
             $imagePath = $request->validated()['image']->store('images', 'public'); // Save in 'storage/app/public/images'
         }
 
-        $user = User::create([
+        $user = new User();
+
+        $user->fill([
             'name' => $request->validated()['name'],
-            'email' => $request->validated()['email'],
             'address' => $request->validated()['address'],
-            'image' => $imagePath,
-            'password' => Hash::make($request->validated()['password']),
+            'image' => $imagePath ?? null,
+            'email' => $request->validated()['email'],
         ]);
+
+        $user->password = Hash::make($request->validated()['password']);
+        $user->save();
 
         $user->assignRole($request->validated()['role']);
 
         return redirect()
-            ->route('user.list')
+            ->route('users.index')
             ->with('success', 'User created successfully!');
     }
 
-    public function edit(UpdateUserRequest $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
         if (isset($request->validated()['image'])) {
             $imagePath = $request->validated()['image']->store('images', 'public'); // Save in 'storage/app/public/images'
@@ -59,17 +59,16 @@ class UserController extends Controller
 
         $user->name = $request->validated()['name'];
         $user->address = $request->validated()['address'];
-        $user->syncRoles($request->validated()['role']);
         $user->image = $imagePath ?? $user->image;
-
+        $user->syncRoles($request->validated()['role']);
 
         $user->save();
 
-        return redirect()->route('user.list')
+        return redirect()->route('user.index')
             ->with('success', 'User updated successfully!');
     }
 
-    public function editView($id)
+    public function edit($id)
     {
         $user = User::findOrFail($id);
 
@@ -78,12 +77,17 @@ class UserController extends Controller
             ;
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
+        if($id === auth()->user()->id)
+            return redirect()->route('user.index')->with(
+                'error', 'You cannot delete your own account!'
+            );
+
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->route('user.list')->with(
+        return redirect()->route('user.index')->with(
             'success', 'User deleted successfully!'
         );
     }

@@ -14,17 +14,17 @@ return new class extends Migration
     {
         Schema::create('annonces', function (Blueprint $table) {
             $table->char('id', 36)->primary();
-            $table->char('user_id', 36);
+            $table->char('client_id', 36);
             $table->string('title');
             $table->string('description');
-            $table->dateTime('start_publication_time')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->dateTime('end_publication_time')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
             $table->string('address');
             $table->json('specifications')->nullable();
-            $table->boolean('useClientContacts')->default(false);
+            $table->boolean('use_client_contacts')->default(false);
             $table->integer('annonce_type')->nullable();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
         });
     }
 

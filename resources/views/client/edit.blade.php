@@ -10,7 +10,7 @@
     <h1>Edit user</h1>
 
     <div class="col-4">
-        <form action="{{route('users.update', $user->id)}}" method="post" enctype="multipart/form-data">
+        <form action="{{route('clients.update', $client->id)}}" method="post" enctype="multipart/form-data">
             @csrf
             @method('put')
             <div class="mb-3">
@@ -21,7 +21,7 @@
                     type="text"
                     class="form-control"
                     placeholder="enter your full name"
-                    value="{{ old('name', $user->name) }}"
+                    value="{{ old('name', $client->name) }}"
                     required
                 >
                 @error('name')
@@ -36,7 +36,7 @@
                     name="address"
                     id="text"
                     type="text"
-                    value="{{ old('address', $user->address) }}"
+                    value="{{ old('address', $client->address) }}"
                     class="form-control"
                     required
                 >
@@ -45,18 +45,24 @@
                 @enderror
             </div>
 
-            <label for="role">Role</label>
-            <select class="form-select mb-3" name="role" id="role" required>
-                <option @selected($user->hasRole(RoleEnum::ADMIN)) value="{{RoleEnum::ADMIN}}">Admin</option>
-                <option @selected($user->hasRole(RoleEnum::MANAGER)) value="{{RoleEnum::MANAGER}}">Manager</option>
-            </select>
-
             <div class="mb-3">
                 <label for="image" class="form-label">Chose an image</label>
                 <input name="image" id="image" type="file" accept="images/jpg" class="form-control">
                 @error('image')
                 <p class="text-danger">{{ $message }}</p>
                 @enderror
+            </div>
+
+            <div>
+                <label for="email" class="form-label">Email</label>
+                <input type="hidden" name="contacts[0][type]" class="form-control"
+                       value="{{ \App\Enums\ContactTypeEnum::EMAIL }}" required>
+                <input name="contacts[0][value]" id="email" value="{{ old('contacts[0][value]', $client->email()) }}" type="email" class="form-control">
+
+                <label for="phone" class="form-label">Phone number</label>
+                <input type="hidden" name="contacts[1][type]" class="form-control"
+                       value="{{ \App\Enums\ContactTypeEnum::PHONE }}" required>
+                <input name="contacts[1][value]" id="phone" value={{ old('contacts[1][value]', $client->phone()) }} type="text" class="form-control">
             </div>
 
             <button class="btn btn-primary mt-4"> Submit</button>

@@ -12,15 +12,15 @@
                     @auth
                         @if(auth()->user()->hasRole('admin'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{route('user.list')}}">Users</a>
+                                <a class="nav-link" href="{{route('users.index')}}">Users</a>
                             </li>
                         @endif
                     @endauth
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('client.index')}}">Clients</a>
+                        <a class="nav-link" href="{{route('clients.index')}}">Clients</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('annonce.index')}}" tabindex="-1" aria-disabled="true">Annonces</a>
+                        <a class="nav-link" href="{{route('annonces.index')}}" tabindex="-1" aria-disabled="true">Annonces</a>
                     </li>
                 </ul>
             </div>
@@ -30,7 +30,7 @@
         @auth
             <div class="d-flex">
                 <span>{{auth()->user()->name . ': ' . Auth::user()->getRoleNames()->first()}}</span>
-                <form action="{{route('logout')}}" method="post">
+                <form action="{{route('auth.logout')}}" method="post">
                     @csrf
                     <button type="submit" class="btn btn-outline-danger">Logout</button>
                 </form>

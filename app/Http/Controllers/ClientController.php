@@ -3,86 +3,127 @@
 namespace App\Http\Controllers;
 
 use App\Enums\RoleEnum;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\CreateClientRequest;
+use App\Http\Requests\UpdateClientRequest;
+use App\Models\Client;
+use App\Models\Contact;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\View;
+use function PHPUnit\Framework\isNull;
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        return View::first(['client.clients']);
+        $clients = Client::orderBy('id', 'desc')->get();
+
+        return View::first(['client.index'])->
+            with('clients', $clients);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'address' => 'required|string|max:255',
-        ]);
-
-        // ✅ Create a new user
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'image' => 'image',
-            'address' => $validated['address'],
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        $user->assignRole(RoleEnum::CLIENT);
-
-
-        // ✅ Redirect or return success
-        return redirect()->route('users.index')->with('success', 'User created successfully!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        return View::first(['client.show'], ['id' => $id]);
+
+
+        return view('client.show')
+            ->with('client', Client::findOrFail($id))
+            ;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    public function store(CreateClientRequest $request)
+    {
+        dump($request->validated()['contacts']);
+
+        $imagePath = $request->validated()['image']->store('images', 'public');
+        $client = new Client();
+
+        $client->fill([
+            'name' => $request->validated()['name'],
+            'image' => $imagePath,
+            'address' => $request->validated()['address'],
+        ]);
+
+        $client->save();
+
+        $contacts = array();
+
+        foreach ($request->validated()['contacts'] as $value) {
+            if (!empty($value['value'])) {
+                $contacts[] = [
+                    'foreign_id' => $client->id,
+                    'type' => $value['type'],
+                    'value' => $value['value'],
+                ];
+            }
+        }
+
+        Contact::insert($contacts);
+
+
+        return redirect()->route('clients.index')
+            ->with('success', 'Client created successfully!')
+            ;
+    }
+
     public function edit(string $id)
     {
-        //
+        return view('client.edit')
+            ->with('client', Client::findOrFail($id))
+            ;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateClientRequest $request, string $id)
     {
-        //
+
+        $client = Client::findOrFail($id);
+
+        $client->name = $request->validated()['name'];
+        $client->address = $request->validated()['address'];
+
+        if(isset($request->validated()['image'])){
+            $imagePath = $request->validated()['image']->store('images', 'public');
+            $client->image = $imagePath;
+        }
+
+        foreach ($request->validated()['contacts'] as $value) {
+            $contact = Contact::where('foreign_id', $client->id)->where('type', $value['type'])->first();
+            if ($contact) {
+                if (!empty($value['value'])) {
+                    $contact->value = $value['value'];
+                    $contact->save();
+                } else {
+                    $contact->delete();
+                }
+            } else {
+                if (!empty($value['value'])) {
+                    Contact::create([
+                        'foreign_id' => $client->id,
+                        'type' => $value['type'],
+                        'value' => $value['value'],
+                    ]);
+                }
+            }
+        }
+
+
+
+        $client->save();
+
+        return redirect()->route('clients.index')
+            ->with('success', 'Client updated successfully!')
+            ;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        $client = Client::findOrFail($id);
+        Contact::where('foreign_id', $client->id)->delete();
+
+        $client->delete();
+
+        return redirect()->route('clients.index')
+            ->with('success', 'Client deleted successfully!')
+            ;
     }
 }

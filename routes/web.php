@@ -11,19 +11,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
-Route::resource('client', ClientController::class);
+Route::post('/annonces/create-maison/{client}', [AnnonceController::class, 'storeMaison'])->name('annonces.store-maison');
+Route::post('/annonces/create-terrain/{client}', [AnnonceController::class, 'storeTerrain'])->name('annonces.store-terrain');
 
-Route::resource('annonce', AnnonceController::class);
+Route::get('/annonces/create-maison/{client}', [AnnonceController::class, 'createMaison'])->name('annonces.create-maison');
+Route::get('/annonces/create-terrain/{client}', [AnnonceController::class, 'createTerrain'])->name('annonces.create-terrain');
+
+Route::resource('annonces', AnnonceController::class)->except('create');
+Route::resource('users', UserController::class)->middleware(['auth', 'role:admin']);
+Route::resource('clients', ClientController::class)
+    ->middleware(['auth', 'role:admin|manager'])
+    ->except(['create']);
+
+
 
 Route::get('/auth', AuthController::class)->name('auth');
-Route::post('/auth', [AuthController::class, 'login'])->name('auth');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/users', [UserController::class, 'list'])->name('user.list');
-    Route::get('/user', [UserController::class, 'createView'])->name('user.createView');
-    Route::post('/user', [UserController::class, 'create'])->name('user.create');
-    Route::get('/user/edit/{id}', [UserController::class, 'editView'])->name('user.editView');
-    Route::put('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
-    Route::delete('/user/{id}', [UserController::class, 'delete'])->name('user.delete');
-});
+Route::post('/auth', [AuthController::class, 'login'])->name('auth.login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');

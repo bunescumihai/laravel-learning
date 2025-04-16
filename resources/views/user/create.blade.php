@@ -5,7 +5,7 @@
 @section('content')
     <h1>Create user</h1>
     <div class="col-4">
-        <form action="{{route('user.create')}}" method="post" enctype="multipart/form-data">
+        <form action="{{route('users.store')}}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
                 <label for="name" class="form-label">Full name</label>

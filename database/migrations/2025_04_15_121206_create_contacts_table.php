@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->char('uuid', 36);
-            $table->smallInteger('contact_type');
-            $table->string('value',255);
+            $table->char('foreign_id', 36);
+            $table->tinyInteger('type');
+            $table->string('value');
+            $table->unique(['foreign_id', 'value', 'type']);
         });
     }
 

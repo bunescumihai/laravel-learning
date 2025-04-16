@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\RoleEnum;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -17,13 +18,10 @@ class RolePermissionSeeder extends Seeder
     {
         $manageUsers = Permission::firstOrCreate(['name' => 'manage users']);
         $manageClientsAnnonces = Permission::firstOrCreate(['name' => 'manage client\'s annonces']);
-        $manageOwnAnnonce = Permission::firstOrCreate(['name' => 'manage own annonce']);
 
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $manager = Role::firstOrCreate(['name' => 'manager']);
-        $client = Role::firstOrCreate(['name' => 'client']);
 
-        $client->givePermissionTo($manageOwnAnnonce);
         $admin->givePermissionTo([$manageUsers, $manageClientsAnnonces]);
         $manager->givePermissionTo($manageClientsAnnonces);
 

@@ -2,25 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateAnnonceMaisonRequest;
+use App\Http\Requests\CreateAnnonceTerrainRequest;
+use App\Models\Annonce;
+use App\Models\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 
 class AnnonceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        return View::first(['annonce.annonces']);
+        return view('annonce.index');
     }
 
+    public function createMaison($id)
+    {
+        Client::findOrFail($id);
+
+        return view('annonce.create-maison', [
+            'id' => $id,
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function createTerrain($id)
     {
-        //
+        Client::findOrFail($id);
+
+        return view('annonce.create-maison', [
+            'id' => $id,
+        ]);
     }
 
     /**
@@ -30,6 +43,36 @@ class AnnonceController extends Controller
     {
         //
     }
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function storeMaison(CreateAnnonceMaisonRequest $request, $id)
+    {
+
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function storeTerrain(CreateAnnonceTerrainRequest $request, $id)
+    {
+        $client = Client::findOrFail($id);
+
+        $annonce = new Annonce();
+
+        $annonce->fill([
+            'client_id' => $request->validated()['client_id'],
+            'title',
+            'description',
+            'address',
+            'specifications',
+            'use_client_contacts',
+            'annonce_type',
+        ]);
+
+    }
+
+
 
     /**
      * Display the specified resource.
@@ -62,4 +105,5 @@ class AnnonceController extends Controller
     {
         //
     }
+
 }
