@@ -13,10 +13,6 @@ class Annonce extends Model
 
     public $timestamps = true;
 
-    public $incrementing = false;
-
-    protected $keyType = 'string';
-
     protected $fillable = [
         'client_id',
         'title',
@@ -27,14 +23,4 @@ class Annonce extends Model
         'annonce_type',
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (empty($model->id)) {
-                $model->id = (string) Str::uuid();
-            }
-        });
-    }
 }
