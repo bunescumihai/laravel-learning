@@ -15,8 +15,6 @@
         <div class="d-flex align-items-center">
             <a href="{{route('users.create')}}" class="btn btn-primary"> Create user</a>
         </div>
-
-
     </div>
 
     @if($users-> isEmpty())

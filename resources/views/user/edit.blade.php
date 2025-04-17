@@ -13,7 +13,8 @@
         <form action="{{route('users.update', $user->id)}}" method="post" enctype="multipart/form-data">
             @csrf
             @method('put')
-            <div class="mb-3">
+
+            <div>
                 <label for="name" class="form-label">Full name</label>
                 <input
                     name="name"
@@ -29,8 +30,7 @@
                 @enderror
             </div>
 
-
-            <div class="mb-3">
+            <div class="mt-3">
                 <label for="text" class="form-label">Address</label>
                 <input
                     name="address"
@@ -45,13 +45,15 @@
                 @enderror
             </div>
 
-            <label for="role">Role</label>
-            <select class="form-select mb-3" name="role" id="role" required>
-                <option @selected($user->hasRole(RoleEnum::ADMIN)) value="{{RoleEnum::ADMIN}}">Admin</option>
-                <option @selected($user->hasRole(RoleEnum::MANAGER)) value="{{RoleEnum::MANAGER}}">Manager</option>
-            </select>
+            <div class="mt-3">
+                <label for="role">Role</label>
+                <select class="form-select" name="role" id="role" required>
+                    <option @selected($user->hasRole(RoleEnum::ADMIN)) value="{{RoleEnum::ADMIN}}">Admin</option>
+                    <option @selected($user->hasRole(RoleEnum::MANAGER)) value="{{RoleEnum::MANAGER}}">Manager</option>
+                </select>
+            </div>
 
-            <div class="mb-3">
+            <div class="mt-3">
                 <label for="image" class="form-label">Chose an image</label>
                 <input name="image" id="image" type="file" accept="images/jpg" class="form-control">
                 @error('image')
@@ -62,7 +64,7 @@
             <button class="btn btn-primary mt-4"> Submit</button>
 
             @if ($errors->any())
-                <div class="alert alert-danger">
+                <div class="alert alert-danger mt-3">
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>

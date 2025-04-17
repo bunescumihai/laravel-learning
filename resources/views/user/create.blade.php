@@ -2,12 +2,16 @@
 
 @section('title', 'Create user')
 
+@php
+    use App\Enums\RoleEnum;
+@endphp
+
 @section('content')
     <h1>Create user</h1>
-    <div class="col-4">
+    <div class="col-4 mt-3">
         <form action="{{route('users.store')}}" method="post" enctype="multipart/form-data">
             @csrf
-            <div class="mb-3">
+            <div>
                 <label for="name" class="form-label">Full name</label>
                 <input
                     name="name"
@@ -19,11 +23,11 @@
                     required
                 >
                 @error('name')
-                    <p class="text-danger">{{ $message }}</p>
+                <p class="text-danger">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="mb-3">
+            <div class="mt-3">
                 <label for="email" class="form-label">Email</label>
                 <input
                     name="email"
@@ -35,19 +39,19 @@
                     required
                 >
                 @error('email')
-                    <p class="text-danger">{{ $message }}</p>
+                <p class="text-danger">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="mb-3">
+            <div class="mt-3">
                 <label for="password" class="form-label">Password</label>
                 <input name="password" id="password" type="password" class="form-control" required>
                 @error('password')
-                    <p class="text-danger">{{ $message }}</p>
+                <p class="text-danger">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="mb-3">
+            <div class="mt-3">
                 <label for="text" class="form-label">Address</label>
                 <input
                     name="address"
@@ -58,26 +62,28 @@
                     required
                 >
                 @error('address')
-                    <p class="text-danger">{{ $message }}</p>
+                <p class="text-danger">{{ $message }}</p>
                 @enderror
             </div>
 
-            <label for="role">Role</label>
-            <select class="form-select mb-3" name="role" id="role" required>
-                <option disabled selected value="">Select the role</option>
-                <option value="{{\App\Enums\RoleEnum::ADMIN}}">Admin</option>
-                <option value="{{\App\Enums\RoleEnum::MANAGER}}">Manager</option>
-            </select>
+            <div class="mt-3">
+                <label for="role">Role</label>
+                <select class="form-select" name="role" id="role" required>
+                    <option disabled selected>Select the role</option>
+                    <option value="{{RoleEnum::ADMIN}}">Admin</option>
+                    <option value="{{RoleEnum::MANAGER}}">Manager</option>
+                </select>
+            </div>
 
-            <div class="mb-3">
+            <div class="mt-3">
                 <label for="image" class="form-label">Chose an image</label>
                 <input name="image" id="image" type="file" accept="images/jpg" class="form-control">
                 @error('image')
-                    <p class="text-danger">{{ $message }}</p>
+                <p class="text-danger">{{ $message }}</p>
                 @enderror
             </div>
 
-            <button class="btn btn-primary mt-4"> Submit</button>
+            <button class="btn btn-primary mt-3"> Submit</button>
 
             @if ($errors->any())
                 <div class="alert alert-danger">

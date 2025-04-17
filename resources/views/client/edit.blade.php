@@ -3,7 +3,7 @@
 @section('title', 'Edit user')
 
 @php
-    use App\Enums\RoleEnum;
+    use App\Enums\ContactTypeEnum;
 @endphp
 
 @section('content')
@@ -13,7 +13,8 @@
         <form action="{{route('clients.update', $client->id)}}" method="post" enctype="multipart/form-data">
             @csrf
             @method('put')
-            <div class="mb-3">
+
+            <div>
                 <label for="name" class="form-label">Full name</label>
                 <input
                     name="name"
@@ -29,8 +30,7 @@
                 @enderror
             </div>
 
-
-            <div class="mb-3">
+            <div class="mt-3">
                 <label for="text" class="form-label">Address</label>
                 <input
                     name="address"
@@ -45,23 +45,30 @@
                 @enderror
             </div>
 
-            <div class="mb-3">
+            <div class="mt-3">
                 <label for="image" class="form-label">Chose an image</label>
-                <input name="image" id="image" type="file" accept="images/jpg" class="form-control">
+                <input
+                    name="image"
+                    id="image"
+                    type="file"
+                    accept="images/jpg"
+                    class="form-control"
+                    required
+                >
                 @error('image')
                 <p class="text-danger">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div>
+            <div class="mt-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="hidden" name="contacts[0][type]" class="form-control"
-                       value="{{ \App\Enums\ContactTypeEnum::EMAIL }}" required>
+                       value="{{ ContactTypeEnum::EMAIL }}" required>
                 <input name="contacts[0][value]" id="email" value="{{ old('contacts[0][value]', $client->email()) }}" type="email" class="form-control">
 
                 <label for="phone" class="form-label">Phone number</label>
                 <input type="hidden" name="contacts[1][type]" class="form-control"
-                       value="{{ \App\Enums\ContactTypeEnum::PHONE }}" required>
+                       value="{{ ContactTypeEnum::PHONE }}" required>
                 <input name="contacts[1][value]" id="phone" value="{{ old('contacts[1][value]', $client->phone()) }}" class="form-control">
             </div>
 

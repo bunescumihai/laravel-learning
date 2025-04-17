@@ -25,6 +25,8 @@ class CreateAnnonceRequest extends FormRequest
             'title' => ['required', 'max:256'],
             'description' => ['required', 'max:2048'],
             'address' => ['required', 'max:256'],
+            'start_publication_date' => ['required', 'date'],
+            'end_publication_date' => ['required', 'date', 'after:start_publication_date'],
             'contacts' => ['array'],
             'contacts.*.type' => ['required', 'string', 'in:' . implode(',', array_map(fn($case) => $case->value, \App\Enums\ContactTypeEnum::cases()))],
             'contacts.*.value' => ['string', 'max:255', 'nullable'],

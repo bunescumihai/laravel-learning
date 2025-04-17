@@ -1,4 +1,4 @@
-<div>
+<div class="mt-3">
     <label class="form-label" for="surface">Surface</label>
     <input
         name="specifications[surface]"

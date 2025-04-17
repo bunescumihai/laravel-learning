@@ -24,6 +24,9 @@ return new class extends Migration
             $table->boolean('use_client_contacts')->default(false);
             $table->integer('annonce_type')->nullable();
 
+            $table->date('start_publication_date')->nullable();
+            $table->date('end_publication_date')->nullable();
+
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
         });
     }

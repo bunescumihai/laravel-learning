@@ -1,4 +1,5 @@
 @props(['annonces' => null])
+
 <div class="row row-cols-4 g-3">
     @foreach($annonces as $annonce)
         <div>

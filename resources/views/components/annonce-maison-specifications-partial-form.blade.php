@@ -1,4 +1,4 @@
-<div>
+<div class="mt-3">
     <label class="form-label" for="roomsNumber">Rooms number</label>
     <input
         name="specifications[roomsNumber]"
