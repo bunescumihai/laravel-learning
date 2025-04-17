@@ -16,9 +16,13 @@
                             </li>
                         @endif
                     @endauth
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('clients.index')}}">Clients</a>
-                    </li>
+                    @auth
+                        @if(auth()->user()->hasRole(['admin', 'manager']))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{route('clients.index')}}">Clients</a>
+                                </li>
+                        @endif
+                    @endauth
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('annonces.index')}}" tabindex="-1" aria-disabled="true">Annonces</a>
                     </li>

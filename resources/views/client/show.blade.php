@@ -28,9 +28,7 @@
                     <a href="{{route('annonces.create-terrain', $client->id)}}" class="btn btn-outline-secondary ms-3">Create annonce terrain</a>
                 </div>
 
-                <div>
-                    <x-annonces :annonces="$client->annonces"></x-annonces>
-                </div>
+                <x-annonces :annonces="$client->annonces"></x-annonces>
             </div>
         </div>
     </section>

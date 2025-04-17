@@ -7,7 +7,6 @@ use App\Http\Requests\CreateAnnonceMaisonRequest;
 use App\Http\Requests\CreateAnnonceTerrainRequest;
 use App\Models\Annonce;
 use App\Models\Client;
-use App\Models\Image;
 use Illuminate\Http\Request;
 
 class AnnonceController extends Controller
@@ -119,8 +118,6 @@ class AnnonceController extends Controller
             ;
 
     }
-
-
 
     /**
      * Display the specified resource.

@@ -27,11 +27,7 @@ class CreateUserRequest extends FormRequest
             'password' => ['required', 'min:6'],
             'address' => ['required', 'max:255'],
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
-            'role' => ['required', 'in:admin,client'],
+            'role' => ['required', 'in:admin,manager'],
         ];
     }
-
-
-
-
 }
