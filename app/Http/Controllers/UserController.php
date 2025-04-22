@@ -51,6 +51,9 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, $id)
     {
+
+        dd($request->validated());
+
         if (isset($request->validated()['image'])) {
             $imagePath = $request->validated()['image']->store('images', 'public'); // Save in 'storage/app/public/images'
         }

@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\ContactTypeEnum;
 
 class Annonce extends Model
 {
-    use SoftDeletes, HasUuids;
+    use SoftDeletes;
 
     public $timestamps = true;
 
@@ -22,6 +23,8 @@ class Annonce extends Model
         'specifications',
         'use_client_contacts',
         'annonce_type',
+        'start_publication_date',
+        'end_publication_date',
     ];
 
     protected $casts = [
@@ -38,5 +41,9 @@ class Annonce extends Model
 
     public function client(): belongsTo{
         return $this->belongsTo(Client::class, 'client_id', 'id');
+    }
+
+    public function contacts(): HasMany{
+        return $this->hasMany(AnnonceContact::class, 'annonce_id', 'id');
     }
 }

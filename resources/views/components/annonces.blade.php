@@ -14,32 +14,56 @@
             <th scope="col">Address</th>
             <th scope="col">Contacts</th>
             <th scope="col">Created at</th>
-{{--            <th scope="col">Edit</th>--}}
+            <th scope="col">Edit</th>
             <th scope="col">Delete</th>
         </tr>
         </thead>
         <tbody>
 
         @foreach($annonces as $annonce)
-            <tr>
+            <tr class="annonce-row-wrapper " data-annonce-id="{{ $annonce->id }}">
                 <th scope="row"></th>
                 <td>{{ $annonce->title }}</td>
                 <td class="text-nowrap overflow-hidden text-truncate" style="max-width: 150px">{{ $annonce->description }}</td>
                 <td>{{ $annonce->address }}</td>
 
-                <td>Contact</td>
+                <td>
+                    @foreach($annonce->contacts as $contact)
+                        {{ $contact->contactType->name }}: {{ $contact->value }} <br/>
+                    @endforeach
+                </td>
                 <td>{{$annonce->created_at}}</td>
-{{--                <td><a href="#" class="link-primary">Edit</a></td>--}}
+                <td><a href="{{route('annonces.edit', $annonce->id)}}" class="link-primary">Edit</a></td>
 
                 <td>
-                    <form action="{{route('annonces.destroy', $annonce->id)}}" method="post">
-                        @csrf
-                        @method('delete')
-                        <button class="btn btn-danger" type="submit">Delete</button>
-                    </form>
+                    <button class="btn btn-danger annonce-delete">Delete</button>
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
+    <script>
+        $('.annonce-delete').on('click', function (e){
+            e.preventDefault();
+            const clientRow = $(this).closest('.annonce-row-wrapper');
+            const annonceId = clientRow.data('annonceId');
+
+            if (confirm('Are you sure you want to delete this annonce?')) {
+                $.ajax({
+                    url: '/annonces/' + annonceId,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function () {
+                        clientRow.remove();
+                    },
+                    error: function (xhr) {
+                        console.error(xhr);
+                        alert(xhr.responseJSON.error);
+                    }
+                });
+            }
+        });
+    </script>
 @endif

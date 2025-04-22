@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('contacts', function (Blueprint $table) {
+        Schema::create('annonces_client_contacts', function (Blueprint $table) {
             $table->id();
-            $table->char('foreign_id', 36);
-            $table->tinyInteger('type');
-            $table->string('value');
-            $table->unique(['foreign_id', 'value', 'type']);
+            $table->foreignId('annonce_id')->references('id')->on('annonces')->onDelete('cascade');
+            $table->foreignId('client_contacts_id')->references('id')->on('client_contacts')->onDelete('cascade');
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('contacts');
+        Schema::dropIfExists('annonces_client_contacts');
     }
 };

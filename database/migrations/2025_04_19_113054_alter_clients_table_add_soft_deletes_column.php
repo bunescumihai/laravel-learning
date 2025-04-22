@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('annonce_id')->references('id')->on('annonces')->onDelete('cascade');
-            $table->string('image');
+        Schema::table("clients", function (Blueprint $table) {
+            $table->softDeletes();
         });
-
     }
 
     /**
@@ -24,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        //
     }
 };

@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\RoleEnum;
 use App\Http\Requests\CreateClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
+use App\Models\ClientContact;
 use App\Models\Contact;
-use Illuminate\Support\Facades\Hash;
+use App\Models\ContactType;
 use Illuminate\Support\Facades\View;
-use function PHPUnit\Framework\isNull;
 
 class ClientController extends Controller
 {
@@ -17,9 +16,12 @@ class ClientController extends Controller
     public function index()
     {
         $clients = Client::orderBy('id', 'desc')->get();
+        $contactTypes = ContactType::get();
 
         return View::first(['client.index'])->
-            with('clients', $clients);
+            with('clients', $clients)
+            ->with('contactTypes', $contactTypes)
+            ;
     }
 
     public function show(string $id)
@@ -33,8 +35,6 @@ class ClientController extends Controller
 
     public function store(CreateClientRequest $request)
     {
-        dump($request->validated()['contacts']);
-
         $imagePath = $request->validated()['image']->store('images', 'public');
         $client = new Client();
 
@@ -44,22 +44,24 @@ class ClientController extends Controller
             'address' => $request->validated()['address'],
         ]);
 
-        $client->save();
+        auth()->user()->clients()->save($client);
 
         $contacts = array();
 
         foreach ($request->validated()['contacts'] as $value) {
             if (!empty($value['value'])) {
-                $contacts[] = [
-                    'foreign_id' => $client->id,
-                    'type' => $value['type'],
+                $contact = new ClientContact();
+
+                $contact->fill([
+                    'contact_type_id' => $value['contactTypeId'],
                     'value' => $value['value'],
-                ];
+                ]);
+
+                $contacts[] = $contact;
             }
         }
 
-        Contact::insert($contacts);
-
+        $client->contacts()->saveMany($contacts);
 
         return redirect()->route('clients.index')
             ->with('success', 'Client created successfully!')
@@ -70,12 +72,12 @@ class ClientController extends Controller
     {
         return view('client.edit')
             ->with('client', Client::findOrFail($id))
+            ->with('contactTypes', ContactType::get())
             ;
     }
 
     public function update(UpdateClientRequest $request, string $id)
     {
-
         $client = Client::findOrFail($id);
 
         $client->name = $request->validated()['name'];
@@ -85,30 +87,26 @@ class ClientController extends Controller
             $imagePath = $request->validated()['image']->store('images', 'public');
             $client->image = $imagePath;
         }
+        $client->save();
+
+        $client->contacts()->delete();
+
+        $contacts = array();
 
         foreach ($request->validated()['contacts'] as $value) {
-            $contact = Contact::where('foreign_id', $client->id)->where('type', $value['type'])->first();
-            if ($contact) {
-                if (!empty($value['value'])) {
-                    $contact->value = $value['value'];
-                    $contact->save();
-                } else {
-                    $contact->delete();
-                }
-            } else {
-                if (!empty($value['value'])) {
-                    Contact::create([
-                        'foreign_id' => $client->id,
-                        'type' => $value['type'],
-                        'value' => $value['value'],
-                    ]);
-                }
+            if (!empty($value['value'])) {
+                $contact = new ClientContact();
+
+                $contact->fill([
+                    'contact_type_id' => $value['contactTypeId'],
+                    'value' => $value['value'],
+                ]);
+
+                $contacts[] = $contact;
             }
         }
 
-
-
-        $client->save();
+        $client->contacts()->saveMany($contacts);
 
         return redirect()->route('clients.index')
             ->with('success', 'Client updated successfully!')
@@ -117,13 +115,16 @@ class ClientController extends Controller
 
     public function destroy(string $id)
     {
-        $client = Client::findOrFail($id);
-        Contact::where('foreign_id', $client->id)->delete();
 
+        $client = Client::findOrFail($id);
+
+        if($client->annonces()->count() > 0){
+            return response()->json(['error' => 'Client cannot be deleted because it has associated annonces.'], 400);
+        }
+
+        Contact::where('foreign_id', $client->id)->delete();
         $client->delete();
 
-        return redirect()->route('clients.index')
-            ->with('success', 'Client deleted successfully!')
-            ;
+        return response()->json(['success' => 'Client deleted successfully!']);
     }
 }

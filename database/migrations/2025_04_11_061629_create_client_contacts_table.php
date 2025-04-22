@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('client_contacts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('annonce_id')->references('id')->on('annonces')->onDelete('cascade');
-            $table->string('image');
+            $table->foreignId('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreignId('contact_type_id')->references('id')->on('contact_types')->onDelete('cascade');
+            $table->string('value');
         });
-
     }
 
     /**
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('client_contacts');
     }
 };

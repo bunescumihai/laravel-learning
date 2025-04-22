@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\annonce;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateAnnonceTerrainRequest extends CreateAnnonceRequest
+class UpdateAnnonceTerrainRequest extends UpdateAnnonceRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class CreateAnnonceTerrainRequest extends CreateAnnonceRequest
     public function rules(): array
     {
         return array_merge(parent::rules(), [
-            'specifications.surface' => ['required', 'numeric', 'min:1'],
+            'specifications.surface' => ['required', 'numeric', 'min:1', 'max:10000'],
         ]);
     }
 }

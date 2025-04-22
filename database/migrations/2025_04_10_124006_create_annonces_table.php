@@ -13,21 +13,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('annonces', function (Blueprint $table) {
-            $table->char('id', 36)->primary();
-            $table->char('client_id', 36);
+            $table->id();
+            $table->foreignId('client_id')->references('id')->on('clients')->onDelete('restrict');
             $table->string('title');
             $table->string('description');
-            $table->timestamps();
-            $table->softDeletes();
             $table->string('address');
             $table->json('specifications')->nullable();
             $table->boolean('use_client_contacts')->default(false);
             $table->integer('annonce_type')->nullable();
-
             $table->date('start_publication_date')->nullable();
             $table->date('end_publication_date')->nullable();
-
-            $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

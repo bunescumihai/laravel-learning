@@ -11,19 +11,28 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
-Route::post('/annonces/create-maison/{client}', [AnnonceController::class, 'storeMaison'])->name('annonces.store-maison');
-Route::post('/annonces/create-terrain/{client}', [AnnonceController::class, 'storeTerrain'])->name('annonces.store-terrain');
+//Route::post('/clients/{client}/annonces/maison', [AnnonceController::class, 'storeMaison'])->name('annonces.store-maison');
+//Route::post('/clients/{client}/annonces/terrain', [AnnonceController::class, 'storeTerrain'])->name('annonces.store-terrain');
+//Route::get('/clients/{client}/annonces/maison', [AnnonceController::class, 'createMaison'])->name('annonces.create-maison');
+//Route::get('/clients/{client}/annonces/terrain', [AnnonceController::class, 'createTerrain'])->name('annonces.create-terrain');
 
-Route::get('/annonces/create-maison/{client}', [AnnonceController::class, 'createMaison'])->name('annonces.create-maison');
-Route::get('/annonces/create-terrain/{client}', [AnnonceController::class, 'createTerrain'])->name('annonces.create-terrain');
+Route::prefix('/clients/{client}/annonces')->middleware(['auth', 'role:admin|manager'])->group(function () {
+    Route::post('/maison', [AnnonceController::class, 'storeMaison'])->name('clients.annonces.store-maison');
+    Route::post('/terrain', [AnnonceController::class, 'storeTerrain'])->name('clients.annonces.store-terrain');
+    Route::get('/maison', [AnnonceController::class, 'createMaison'])->name('clients.annonces.create-maison');
+    Route::get('/terrain', [AnnonceController::class, 'createTerrain'])->name('clients.annonces.create-terrain');
+});
 
-Route::resource('annonces', AnnonceController::class)->except('create');
-Route::resource('users', UserController::class)->middleware(['auth', 'role:admin']);
 Route::resource('clients', ClientController::class)
     ->middleware(['auth', 'role:admin|manager'])
     ->except(['create']);
 
+Route::put('annonces/{annonce}/terrain', [AnnonceController::class, 'updateTerrain'])->name('annonces.update-terrain');
+Route::put('annonces/{annonce}/maison', [AnnonceController::class, 'updateMaison'])->name('annonces.update-maison');
 
+Route::resource('annonces', AnnonceController::class)->except(['create', 'update']);
+
+Route::resource('users', UserController::class)->middleware(['auth', 'role:admin']);
 
 Route::get('/auth', AuthController::class)->name('login');
 Route::post('/auth', [AuthController::class, 'login'])->name('login');

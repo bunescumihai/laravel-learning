@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\ContactType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateClientRequest extends FormRequest
 {
@@ -26,7 +28,7 @@ class UpdateClientRequest extends FormRequest
             'address' => ['required', 'string', 'max:255'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg'],
             'contacts' => ['array'],
-            'contacts.*.type' => ['required', 'string', 'in:' . implode(',', array_map(fn($case) => $case->value, \App\Enums\ContactTypeEnum::cases()))],
+            'contacts.*.contactTypeId' => ['required', Rule::exists(ContactType::class, 'id')],
             'contacts.*.value' => ['nullable', 'string'],
         ];
     }

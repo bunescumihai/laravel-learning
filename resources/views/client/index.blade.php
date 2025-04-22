@@ -63,15 +63,12 @@
                         </div>
 
                         <div>
-                            <label for="email" class="form-label">Email</label>
-                            <input type="hidden" name="contacts[0][type]" class="form-control"
-                                   value="{{ \App\Enums\ContactTypeEnum::EMAIL }}" required>
-                            <input name="contacts[0][value]" id="email" type="email" class="form-control">
-
-                            <label for="phone" class="form-label">Phone number</label>
-                            <input type="hidden" name="contacts[1][type]" class="form-control"
-                                   value="{{ \App\Enums\ContactTypeEnum::PHONE }}" required>
-                            <input name="contacts[1][value]" id="phone" type="text" class="form-control">
+                            @foreach($contactTypes as $index => $contactType)
+                                <label for="{{$contactType->name}}" class="form-label">{{ $contactType->name }}</label>
+                                <input type="hidden" name="contacts[{{ $index }}][contactTypeId]" class="form-control"
+                                       value="{{ $contactType->id }}" required>
+                                <input name="contacts[{{ $index }}][value]" id="{{$contactType->name}}" class="form-control">
+                            @endforeach
                         </div>
 
                         <button class="btn btn-primary mt-4">Submit</button>
@@ -100,7 +97,7 @@
             </thead>
             <tbody>
             @foreach($clients as $client)
-                <tr>
+                <tr class="client-row-wrapper" data-client-id="{{ $client->id }}">
                     <th scope="row"></th>
                     <td>
                         <a href="{{ route('clients.show', $client->id) }}" class="align-items-center d-flex">
@@ -115,7 +112,7 @@
 
                     <td>
                         @foreach($client->contacts as $contact)
-                            {{ \App\Enums\ContactTypeEnum::getKeyByValue($contact->type).': ' . $contact->value }}<br>
+                            {{$contact->contactType->name}}: {{ $contact->value }}<br>
                         @endforeach
                     </td>
 
@@ -127,11 +124,7 @@
                     </td>
 
                     <td>
-                        <form action="{{route('clients.destroy', $client->id)}}" method="post">
-                            @csrf
-                            @method('delete')
-                            <button class="btn btn-danger" type="submit">Delete</button>
-                        </form>
+                        <button class="btn btn-danger client-delete" type="submit">Delete</button>
                     </td>
                 </tr>
             @endforeach
@@ -147,5 +140,30 @@
             myModal.toggle();
         </script>
     @endif
+
+    <script>
+        $('.client-delete').on('click', function (e){
+            e.preventDefault();
+            const clientRow = $(this).closest('.client-row-wrapper');
+            const clientId = clientRow.data('clientId');
+
+            if (confirm('Are you sure you want to delete this client?')) {
+                $.ajax({
+                    url: '/clients/' + clientId,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function () {
+                        clientRow.remove();
+                    },
+                    error: function (xhr) {
+                        console.error(xhr);
+                        alert(xhr.responseJSON.error);
+                    }
+                });
+            }
+        });
+    </script>
 
 @endsection

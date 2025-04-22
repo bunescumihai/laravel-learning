@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('clients', function (Blueprint $table) {
-            $table->char('id', 36)->primary();
+            $table->id();
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->string('name');
             $table->string('address');
             $table->string('image');

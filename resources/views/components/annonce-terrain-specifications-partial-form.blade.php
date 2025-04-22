@@ -7,7 +7,7 @@
         class="form-control"
         min="1"
         max="10"
-        value="1"
+        value="{{ old('specifications[roomsNumber]', $annonce->specifications->surface ?? 1) }}"
         required
     >
 </div>
