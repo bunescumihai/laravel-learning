@@ -10,6 +10,7 @@ use App\Http\Requests\annonce\UpdateAnnonceTerrainRequest;
 use App\Models\Annonce;
 use App\Models\AnnonceContact;
 use App\Models\Client;
+use App\Models\Image;
 use Illuminate\Http\Request;
 
 class AnnonceController extends Controller
@@ -305,6 +306,31 @@ class AnnonceController extends Controller
 //        $annonce->images()->delete();
 
         $annonce->delete();
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
+    public function destroyImage(int $id)
+    {
+        $image = Image::findOrFail($id);
+
+        $annonce = $image->annonce;
+
+        if($annonce->images()->count() <= 1){
+            return response()->json([
+                'success' => false,
+                'message' => 'You cannot delete the last image of an annonce',
+            ], 400);
+        }
+
+        $imagePath = public_path('storage/' . $image->image);
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        };
+
+        $image->delete();
 
         return response()->json([
             'success' => true,

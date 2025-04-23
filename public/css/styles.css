@@ -45,3 +45,35 @@
     width: 100px;
     height: 100px;
 }
+
+.edit-annonce-images-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+
+.edit-annonce-images-wrapper .edit-annonce-image{
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    position: relative;
+}
+
+.edit-annonce-images-wrapper .edit-annonce-image.edit-annonce-image-md{
+    width: 200px;
+    height: 200px;
+}
+
+.edit-annonce-images-wrapper .edit-annonce-image.edit-annonce-image-sm{
+    width: 100px;
+    height: 100px;
+}
+
+.edit-annonce-images-wrapper .edit-annonce-image .btn-close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 8px 8px 0 0;
+}

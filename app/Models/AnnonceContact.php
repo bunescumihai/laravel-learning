@@ -10,6 +10,13 @@ class AnnonceContact extends Model
 {
     public $timestamps = false;
 
+    const TYPE_PHONE = 1;
+
+    const TYPE_MAP = [
+        self::TYPE_PHONE => 'phone',
+        2 => 'email',
+    ];
+
     protected $fillable = [
         'contact_type_id',
         'value',

@@ -133,6 +133,19 @@
 
     <div class="images-preview mt-2"></div>
 
+    @isset($annonce)
+        <div class="edit-annonce-images-wrapper mt-2">
+            @foreach($annonce->images as $image)
+                <div
+                    data-image-id="{{ $image->id }}"
+                    class="edit-annonce-image edit-annonce-image-md"
+                     style="background-image: url('{{ asset('storage/' . $image->image) }}');">
+                    <button class="btn btn-close"></button>
+                </div>
+            @endforeach
+        </div>
+    @endif
+
     <button class="btn btn-primary mt-4">Submit</button>
 
     @if ($errors->any())
@@ -149,6 +162,13 @@
 </form>
 
 <script>
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': 'Hello'
+        }
+    });
+
     let $imagesPreview = $('.images-preview');
 
     $('#images').on('change', function (e){
@@ -168,5 +188,32 @@
             }
             reader.readAsDataURL(image);
         });
+    });
+
+    $('.edit-annonce-images-wrapper').on('click', '.btn-close', function (e) {
+        e.preventDefault();
+
+        let $target = $(e.currentTarget);
+        $target.attr('disabled', true);
+
+        let $image = $(this).closest('.edit-annonce-image');
+
+        $.ajax({
+            url: '{{ route("annonces.images.destroy", ":image") }}'.replace(':image', $image.data('imageId')),
+            type: 'DELETE',
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: () => {
+                $image.remove();
+            },
+            error: (xhr) => {
+                console.error(xhr);
+                alert(xhr.responseJSON.message);
+            },
+            always: () => {
+                $target.removeAttr('disabled');
+            }
+        })
     });
 </script>
