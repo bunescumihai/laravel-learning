@@ -1,0 +1,79 @@
+.form-label-image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(0, 0, 0, 0.27);
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.form-label-image:hover .icon{
+    opacity: 0.5;
+}
+
+.form-label-image .icon{
+    opacity: 0.2;
+    color: #000;
+    display: block;
+}
+
+.images-preview{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.images-preview .image{
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+}
+
+.images-preview .image.image-md{
+    width: 200px;
+    height: 200px;
+}
+
+.images-preview .image.image-sm{
+    width: 100px;
+    height: 100px;
+}
+
+.edit-annonce-images-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+
+.edit-annonce-images-wrapper .edit-annonce-image{
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    position: relative;
+}
+
+.edit-annonce-images-wrapper .edit-annonce-image.edit-annonce-image-md{
+    width: 200px;
+    height: 200px;
+}
+
+.edit-annonce-images-wrapper .edit-annonce-image.edit-annonce-image-sm{
+    width: 100px;
+    height: 100px;
+}
+
+.edit-annonce-images-wrapper .edit-annonce-image .btn-close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 8px 8px 0 0;
+}
